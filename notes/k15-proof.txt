@@ -1,0 +1,18 @@
+K15 proof result:
+
+Host:
+- Ubuntu 24.04
+- Intel Arc-class integrated GPU exposed as Intel(R) Graphics
+- /dev/dri passthrough works
+- Docker image: intel/vllm:0.21.0-ubuntu24.04-20260625
+
+Container proof:
+- torch 2.11.0+xpu
+- torch.xpu.is_available() = True
+- XPU count = 1
+- device = Intel(R) Graphics
+- vLLM imports successfully
+- vLLM version = 0.21.1.dev17+g0a4756bb5
+
+Important fix:
+- LD_LIBRARY_PATH must include oneAPI CCL/MPI/compiler/lib paths.
