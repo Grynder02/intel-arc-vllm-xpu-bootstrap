@@ -16,3 +16,22 @@ Container proof:
 
 Important fix:
 - LD_LIBRARY_PATH must include oneAPI CCL/MPI/compiler/lib paths.
+
+Successful generation proof:
+- Model: facebook/opt-125m
+- vLLM device_config: xpu
+- dtype: float32
+- enforce_eager: true
+- Flash Attention avoided by float32 Triton fallback
+- XPU sampler kernel disabled
+- FlashInfer sampler disabled
+- Prompt processed successfully
+- Tokens generated successfully
+- Engine shutdown completed cleanly
+
+Known-good runtime flags:
+- VLLM_XPU_USE_SAMPLER_KERNEL=0
+- VLLM_USE_FLASHINFER_SAMPLER=0
+
+Known-good script:
+- scripts/k15-known-good-generate.sh
