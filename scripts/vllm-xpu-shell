@@ -11,6 +11,7 @@ exec docker run --rm -it \
   -v "$PWD":/workspace \
   -w /workspace \
   -e LD_LIBRARY_PATH=/opt/intel/oneapi/ccl/2021.15/lib:/opt/intel/oneapi/mpi/2021.15/lib:/opt/intel/oneapi/compiler/2025.3/lib:/opt/intel/oneapi/2025.3/lib:/usr/local/lib \
+  -e VLLM_WORKER_MULTIPROC_METHOD=spawn \
   --entrypoint bash \
   "$IMAGE" \
   "$@"

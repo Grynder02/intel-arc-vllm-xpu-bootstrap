@@ -18,6 +18,7 @@ docker run -d \
   --ipc=host \
   -e VLLM_XPU_USE_SAMPLER_KERNEL=0 \
   -e VLLM_USE_FLASHINFER_SAMPLER=0 \
+  -e VLLM_WORKER_MULTIPROC_METHOD=spawn \
   -e LD_LIBRARY_PATH=/opt/intel/oneapi/ccl/2021.15/lib:/opt/intel/oneapi/mpi/2021.15/lib:/opt/intel/oneapi/compiler/2025.3/lib:/opt/intel/oneapi/2025.3/lib:/usr/local/lib \
   --entrypoint bash \
   "$IMAGE" \
