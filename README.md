@@ -7,6 +7,7 @@ Tested first on Ubuntu 24.04 with Intel Graphics exposed through `/dev/dri`.
 Current proof:
 - Docker image: `intel/vllm:0.21.0-ubuntu24.04-20260625`
 - Torch: `2.11.0+xpu`
+- vLLM inside the image: `0.21.1.dev17+g0a4756bb5` (the tag says 0.21.0, but the image ships a dev build — trust `vllm --version` inside the container, not the tag)
 - `torch.xpu.is_available()` = `True`
 - vLLM imports successfully
 - Required fix: pass oneAPI library paths through `LD_LIBRARY_PATH`
