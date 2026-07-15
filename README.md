@@ -35,12 +35,20 @@ a "working" setup breaks after switching dtype.
 ## Known limitations
 
 - **Host driver fixes do not reach into the container.** The intel/vllm image ships
-  its own Level Zero loader and compute runtime. If you have patched the host driver
-  stack (e.g. for the Level Zero loader's fork-after-init deadlock, where a
-  `std::call_once`-cached init makes child processes hang on first GPU call after
-  `fork()`), the container still runs the **unpatched** stack. These scripts set
-  `VLLM_WORKER_MULTIPROC_METHOD=spawn` to sidestep that class of bug — do not remove
-  it unless the image's compute runtime is known to be fork-safe.
+  its own Level Zero loader and compute runtime, so a patched host driver stack does
+  not change what runs inside the container. Concretely: Level Zero has a
+  fork-after-init bug on Meteor Lake-class hardware (the loader's
+  `std::call_once`-cached init makes forked children hang or see 0 drivers). A fix
+  exists — see the
+  [`fix/meteor-lake-fork-safety` branch](https://github.com/Grynder02/compute-runtime/tree/fix/meteor-lake-fork-safety)
+  and the upstream submission
+  [intel/compute-runtime#954](https://github.com/intel/compute-runtime/pull/954) —
+  and if you build/install that fixed driver on the host, you can run vLLM bare-metal
+  (host venv, no container) instead of using this repo. This repo remains the
+  **zero-host-modification** path for users who haven't touched their driver stack.
+  Either way these scripts set `VLLM_WORKER_MULTIPROC_METHOD=spawn`: the container's
+  runtime is unpatched, and even on a fixed host, PyTorch itself refuses XPU re-init
+  in forked children — spawn is the supported worker mode everywhere. Do not remove it.
 - The smoke test (`facebook/opt-125m`, fp32, 512 ctx) proves the plumbing, not
   performance. Real models on an iGPU will be memory-bound; fp32 doubles the
   footprint vs bf16.
